@@ -3,33 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Letreiro Animado</title>
+  <title>Letreiro Motivacional</title>
+
   <style>
-    /* Estilo geral da página */
+    /* ===== (d) Largura e altura da tela ===== */
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh; /* Altura total da janela */
-      background-color: #f0f0f0;
       margin: 0;
-    }
-
-    /* Área do letreiro */
-    .container {
-      position: relative;
-      width: 80%; /* Largura da tela */
-      height: 100px; /* Altura do letreiro */
-      background-color: #ffffff;
-      border: 2px solid #333;
-      overflow: hidden;
-      padding: 20px; /* Espaço livre ao redor do texto */
+      height: 100vh;          /* altura total da tela */
+      width: 100vw;           /* largura total da tela */
       display: flex;
-      align-items: center;
+      flex-direction: column; /* organiza elementos verticalmente */
       justify-content: center;
+      align-items: center;
+      background-color: #f0f4f8;
+      font-family: Arial, sans-serif;
     }
 
-    /* Texto do letreiro */
+    /* ===== Container do letreiro ===== */
+    .letreiro-container {
+      position: relative;
+      width: 80%;          /* define largura */
+      height: 100px;       /* define altura */
+      background-color: white;
+      border: 3px solid #0077cc;
+      border-radius: 10px;
+      overflow: hidden;
+      padding: 20px;       /* (e) Espaço livre ao redor do texto */
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ===== (f) Texto centralizado dentro do letreiro ===== */
     .texto {
       position: absolute;
       white-space: nowrap;
@@ -37,25 +43,55 @@
       font-weight: bold;
       color: #0077cc;
     }
+
+    /* ===== Controle de velocidade ===== */
+    .controle {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    input[type="range"] {
+      width: 300px;
+      accent-color: #0077cc;
+    }
+
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="texto" id="letreiro">💪 Acredite em você e vá além! 🚀</div>
+  <h2>💫 Letreiro Motivacional 💫</h2>
+
+  <!-- (d,e,f) Estrutura do letreiro -->
+  <div class="letreiro-container">
+    <!-- (c) Frase motivacional -->
+    <div class="texto" id="texto">💪 Acredite no seu potencial e vá além! 🚀</div>
+  </div>
+
+  <!-- (g) Controle de velocidade -->
+  <div class="controle">
+    <label for="velocidade">Velocidade:</label><br>
+    <input type="range" id="velocidade" min="1" max="10" value="3">
   </div>
 
   <script>
-    const texto = document.getElementById("letreiro");
-    const container = document.querySelector(".container");
+    // Seleciona elementos
+    const texto = document.getElementById("texto");
+    const container = document.querySelector(".letreiro-container");
+    const controleVelocidade = document.getElementById("velocidade");
 
-    // Posição inicial e direção
+    // (a,b) Posição inicial e direção (esquerda → direita)
     let posicao = 0;
     let direcao = 1; // 1 = direita, -1 = esquerda
 
-    // Controle de velocidade (pixels por frame)
-    const velocidade = 2;
+    // (g) Velocidade inicial
+    let velocidade = parseInt(controleVelocidade.value);
 
+    // Atualiza velocidade ao mover o controle
+    controleVelocidade.addEventListener("input", () => {
+      velocidade = parseInt(controleVelocidade.value);
+    });
+
+    // Função de animação
     function animar() {
       const larguraTexto = texto.offsetWidth;
       const larguraContainer = container.offsetWidth;
@@ -63,22 +99,19 @@
       // Atualiza posição
       posicao += direcao * velocidade;
 
-      // Inverte a direção quando o texto chega nas bordas
-      if (posicao + larguraTexto >= larguraContainer) {
-        direcao = -1;
-      } else if (posicao <= 0) {
-        direcao = 1;
-      }
+      // Inverte direção nas bordas
+      if (posicao + larguraTexto >= larguraContainer) direcao = -1;
+      if (posicao <= 0) direcao = 1;
 
-      // Aplica a nova posição
       texto.style.left = posicao + "px";
 
-      // Chama novamente o loop de animação
+      // Loop contínuo
       requestAnimationFrame(animar);
     }
 
     // Inicia a animação
     animar();
   </script>
+
 </body>
 </html>
