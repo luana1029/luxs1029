@@ -1,0 +1,2 @@
+const velocidade = 2;
+
